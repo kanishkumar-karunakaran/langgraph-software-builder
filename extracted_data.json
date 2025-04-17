@@ -1,0 +1,165 @@
+[
+    {
+        "api_endpoints": [
+            {
+                "method": "GET",
+                "path": "/api/dashboard/tiles",
+                "description": "Fetch Dashboard Data",
+                "parameters": []
+            },
+            {
+                "method": "POST",
+                "path": "/api/lms/leaves/apply",
+                "description": "Apply for Leave",
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "type": "date",
+                        "required": true
+                    },
+                    {
+                        "name": "end_date",
+                        "type": "date",
+                        "required": true
+                    },
+                    {
+                        "name": "reason",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            },
+            {
+                "method": "PATCH",
+                "path": "/api/lms/leaves/{leave_id}/approve",
+                "description": "Approve Leave (Manager Only)",
+                "parameters": [
+                    {
+                        "name": "leave_id",
+                        "type": "int",
+                        "required": true
+                    },
+                    {
+                        "name": "status",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            },
+            {
+                "method": "GET",
+                "path": "/api/pods/{pod_id}/details",
+                "description": "Get Pod Details",
+                "parameters": [
+                    {
+                        "name": "pod_id",
+                        "type": "int",
+                        "required": true
+                    }
+                ]
+            },
+            {
+                "method": "POST",
+                "path": "/api/pods/{pod_id}/recommend",
+                "description": "Recommend an Employee for a Pod",
+                "parameters": [
+                    {
+                        "name": "pod_id",
+                        "type": "int",
+                        "required": true
+                    },
+                    {
+                        "name": "recommended_user_id",
+                        "type": "int",
+                        "required": true
+                    }
+                ]
+            },
+            {
+                "method": "POST",
+                "path": "/api/auth/login",
+                "description": "User Login",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "password",
+                        "type": "string",
+                        "required": true
+                    }
+                ]
+            },
+            {
+                "method": "GET",
+                "path": "/api/auth/user",
+                "description": "Fetch Current User Details",
+                "parameters": []
+            }
+        ],
+        "backend_logic": [
+            "Implement RBAC for managers and employees",
+            "Ensure asynchronous API calls for background operations",
+            "Implement CRUD operations for core entities across all services"
+        ],
+        "database_schema": {
+            "tables": {
+                "users": {
+                    "columns": {
+                        "id": "integer",
+                        "name": "string",
+                        "email": "string",
+                        "role": "string"
+                    },
+                    "primary_key": "id",
+                    "foreign_keys": []
+                },
+                "leaves": {
+                    "columns": {
+                        "id": "integer",
+                        "start_date": "date",
+                        "end_date": "date",
+                        "reason": "string",
+                        "status": "string"
+                    },
+                    "primary_key": "id",
+                    "foreign_keys": []
+                },
+                "pods": {
+                    "columns": {
+                        "id": "integer",
+                        "name": "string"
+                    },
+                    "primary_key": "id",
+                    "foreign_keys": []
+                },
+                "pod_members": {
+                    "columns": {
+                        "id": "integer",
+                        "pod_id": "integer",
+                        "user_id": "integer",
+                        "role": "string"
+                    },
+                    "primary_key": "id",
+                    "foreign_keys": [
+                        "pod_id",
+                        "user_id"
+                    ]
+                }
+            }
+        },
+        "authentication": {
+            "type": "JWT",
+            "roles": [
+                "manager",
+                "employee"
+            ],
+            "rules": [
+                "Managers can access both manager and employee related APIs",
+                "Employees can only access user specific APIs"
+            ]
+        }
+    }
+]
