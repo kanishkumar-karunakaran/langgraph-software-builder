@@ -24,15 +24,9 @@ GROQ_API_KEY = "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"
 client = Groq(api_key=GROQ_API_KEY)
 
 def load_extracted_data():
-    try:
-        with open("extracted_data.json", "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        print("❌ Error: extracted_data.json not found.")
-        sys.exit(1)
-    except json.JSONDecodeError:
-        print("❌ Error: extracted_data.json is not valid JSON.")
-        sys.exit(1)
+    with open("extracted_data.json", "r") as f:
+        return json.load(f)
+   
 
 @lru_cache(maxsize=128)
 def generate_test_code_from_llama3(prompt: str):
@@ -186,7 +180,5 @@ def generate_test_file(file_path: str, prompt: str, context_data: dict):
 
     print(f"✅ Generated: {file_path}")
 
-if __name__ == "__main__":
-    node_generate_tests()
 
-
+node_generate_tests()

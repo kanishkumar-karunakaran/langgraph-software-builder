@@ -3,9 +3,8 @@ import docx
 import json
 import os
 import base64
-from dotenv import load_dotenv
-load_dotenv()
-GROQ_API_KEY = os.getenv("GROK_API_KEY")
+
+GROQ_API_KEY = "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"
 
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -186,5 +185,7 @@ def node1_parse_srs(state):
         "parsed_spec": result_json,
         "srs_text": srs_text
     }
+
+node1_parse_srs({"srs_file": "srs.docx"})
 
 
