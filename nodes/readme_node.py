@@ -160,7 +160,6 @@ base_dir = os.getcwd()  # Get current working directory
 json_file_path = os.path.join(base_dir, "extracted_data.json")
 
 
-# Generate the README
 generate_readme(json_file_path, base_dir)
 
 
