@@ -128,7 +128,6 @@ def setup_alembic(project, db_user, db_password, db_name):
         print(f"Alembic setup error: {e}")
 
 
-# 🌟 LangGraph Node 2 Function
 def node2_generate_setup(state):
     try:
         project = state.get("project_name") or f"fastapi_project_{datetime.now().strftime('%Y%m%d%H%M%S')}"
@@ -161,14 +160,3 @@ def node2_generate_setup(state):
     except Exception as e:
         print(f"Agent setup error: {e}")
         return {"error": str(e)}
-
-
-# Optional runner
-if __name__ == "__main__":
-    state = {
-        "project_name": None  # Optional: pass a custom project name
-    }
-    result = node2_generate_setup(state)
-    print("\n📦 Final Result State:\n", result)
-
-
