@@ -1,8 +1,6 @@
 import json
 import os
 
-
-# Load your API JSON data
 def load_api_data(json_path):
     try:
         with open(json_path, "r", encoding="utf-8") as file:
@@ -13,13 +11,11 @@ def load_api_data(json_path):
         return None
 
 
-# Prepare the prompt to generate README based on the project structure and JSON data
 def prepare_readme_prompt(api_data, project_folder):
     prompt = "# Project Setup and Structure\n\n"
     prompt += "This README outlines the project setup, structure, and relevant details to get started with the FastAPI project.\n\n"
 
 
-    # **Project Folder Structure** - Analyzing folder structure (files inside the FastAPI project folder)
     prompt += "## Project Folder Structure\n"
     for root, dirs, files in os.walk(project_folder):
         for file in files:
@@ -30,7 +26,6 @@ def prepare_readme_prompt(api_data, project_folder):
     prompt += "\n"
 
 
-    # **Backend Logic** - If available, this will include logic defined in the JSON
     prompt += "## Backend Logic\n"
     backend_logic = api_data[0].get("backend_logic", [])
     if backend_logic:
@@ -42,7 +37,6 @@ def prepare_readme_prompt(api_data, project_folder):
     prompt += "\n"
 
 
-    # **Database Schema** - Extracting tables, columns, and relationships
     prompt += "## Database Schema\n"
     db_schema = api_data[0].get("database_schema", {})
     if db_schema:
@@ -57,27 +51,21 @@ def prepare_readme_prompt(api_data, project_folder):
             if table_info.get("foreign_keys"):
                 prompt += "Foreign Keys:\n"
                 for fk in table_info.get("foreign_keys", []):
-                    # Handle foreign key data gracefully
                     if isinstance(fk, dict):
-                        # If it's a dictionary, try to access the 'table' and 'column' keys
                         table = fk.get('table', 'Unknown table')
                         column = fk.get('column', 'Unknown column')
                         prompt += f"- References `{table}` (`{column}`)\n"
                     elif isinstance(fk, str):
-                        # If it's a string, handle it appropriately
                         prompt += f"- Foreign Key (String): {fk}\n"
                     elif isinstance(fk, list):
-                        # If it's a list, iterate through it and process each item
                         prompt += f"- Foreign Key (List): {', '.join(fk)}\n"
                     else:
-                        # If it's an unknown format, log it as unhandled
                         prompt += f"- Invalid foreign key format: {fk}\n"
     else:
         prompt += "No database schema available.\n"
     prompt += "\n"
 
 
-    # **Authentication** - Include authentication and role-based access from the JSON
     prompt += "## Authentication\n"
     auth_info = api_data[0].get("authentication", {})
     if auth_info:
@@ -94,7 +82,6 @@ def prepare_readme_prompt(api_data, project_folder):
         prompt += "No authentication information available.\n"
 
 
-    # **API Endpoints** - Mention key API endpoints
     prompt += "\n## Key API Endpoints\n"
     for entry in api_data:
         for endpoint in entry.get("api_endpoints", []):
@@ -104,21 +91,15 @@ def prepare_readme_prompt(api_data, project_folder):
             prompt += f"- `{method}` {path}: {description}\n"
     prompt += "\n"
 
-
-    # Return the final prompt
     return prompt
 
 
-# Generate README using Llama or another AI model
 def generate_readme_with_ai(prompt):
-    # This is a mock-up of calling an AI model, e.g., Llama, to generate detailed content for the README
-    # We will directly use the prompt as input and assume the AI generates a rich README output.
-    # Replace with an actual AI API call if using a model like Llama, GPT-3, etc.
+
     generated_readme = f"# Auto-generated README\n\n{prompt}"
     return generated_readme
 
 
-# Save the generated README to a markdown file
 def save_readme_to_file(readme_content, project_folder):
     output_file_path = os.path.join(project_folder, "README.md")
     with open(output_file_path, "w", encoding="utf-8") as md_file:
@@ -126,15 +107,12 @@ def save_readme_to_file(readme_content, project_folder):
     print(f"✅ README saved to {output_file_path}")
 
 
-# Main flow
 def generate_readme(json_path, base_dir):
-    # Load API data from the JSON file
     api_data = load_api_data(json_path)
     if api_data is None:
         return
 
 
-    # Find the latest fastapi_project folder
     dirs = [d for d in os.listdir(base_dir) if d.startswith("fastapi_project_") and os.path.isdir(os.path.join(base_dir, d))]
     if not dirs:
         print("❌ No project folder found.")
@@ -143,20 +121,14 @@ def generate_readme(json_path, base_dir):
     project_folder = os.path.join(base_dir, dirs[0])
 
 
-    # Prepare the prompt for the README
     prompt = prepare_readme_prompt(api_data, project_folder)
 
-
-    # Generate README using AI model (like Llama or GPT)
     readme_content = generate_readme_with_ai(prompt)
 
-
-    # Save the generated README to the project folder
     save_readme_to_file(readme_content, project_folder)
 
 
-# Define file paths
-base_dir = os.getcwd()  # Get current working directory
+base_dir = os.getcwd()  
 json_file_path = os.path.join(base_dir, "extracted_data.json")
 
 

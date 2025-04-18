@@ -57,13 +57,16 @@ def generate_code_from_groq(prompt: str):
 
 
 def get_db_connection():
+   
     connection = psycopg2.connect(
-        host="localhost",
-        database="fastapi_project_db",
-        user="user",
-        password="password",
+        host="localhost",    
+        port=5432,
+        database="mydb",
+        user="postgres",     
+        password="yourpassword" 
     )
     return connection
+
 
 
 def save_feedback_to_db(code_id, feedback, error=None):
