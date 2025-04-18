@@ -3,10 +3,9 @@ import docx
 import json
 import os
 import base64
-from io import BytesIO
-from PIL import Image
-
-GROQ_API_KEY = "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"
+from dotenv import load_dotenv
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROK_API_KEY")
 
 client = Groq(api_key=GROQ_API_KEY)
 
